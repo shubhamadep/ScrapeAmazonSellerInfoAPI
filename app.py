@@ -58,8 +58,10 @@ def predict():
     formatted_output = formatting_reviews(output_data)
     print("output: ",formatted_output)
 
+    # if not formatted_output:
     data["ProductInfo"] = formatted_output
-
+    data = {"success": True}
+    
     response = flask.jsonify(data)
 
     return response
