@@ -41,6 +41,10 @@ def formatting_reviews(reviews):
                 corpus.append(review)
     return corpus
 
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
+
 @app.route("/scrape", methods=["GET", "POST"])
 def predict():
     
@@ -61,4 +65,12 @@ def predict():
     return response
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5500)
+    '''
+        use 
+            app.run(host='0.0.0.0', port=5500) to run locally. 
+        
+        Threaded option to enable multiple instances for multiple user access support
+            app.run(threaded=True, port=5000)
+    '''
+    # app.run(host='0.0.0.0', port=5500)
+    app.run(threaded=True, port=5000)
