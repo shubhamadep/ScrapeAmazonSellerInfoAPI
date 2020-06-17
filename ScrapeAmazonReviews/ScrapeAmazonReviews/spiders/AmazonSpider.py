@@ -11,7 +11,7 @@ class AmazonspiderSpider(scrapy.Spider):
         '''
 
         self.Amazon_Standard_Identification_Number = url
-        print(self.Amazon_Standard_Identification_Number)
+        print("Parsing Seller ID: ", self.Amazon_Standard_Identification_Number)
         self.page_number = 1
         # self.start_urls = ['https://www.amazon.com/Echo-Wall-Clock-requires-compatible/product-reviews/'+self.Amazon_Standard_Identification_Number+'/ref=cm_cr_getr_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber='+str(1)]
         self.start_urls = ['https://www.amazon.com/s?me=A19R3BN6ZSO9A1&marketplaceID=ATVPDKIKX0DER']
@@ -21,12 +21,12 @@ class AmazonspiderSpider(scrapy.Spider):
     def parse(self, response):
         print('parser is called.')
         items = ScrapeamazonreviewsItem()
+        print("item: ", ScrapeamazonreviewsItem)
+        #productInfo = response.css('.a-text-normal span::text').extract()
+        #productPrices = response.css('.a-price-whole span::text').extract()
 
-        productInfo = response.css('.a-text-normal span::text').extract()
-        productPrices = response.css('.a-price-whole span::text').extract()
-
-        items['productInfo'] = productInfo
-        items['productPrices'] = productPrices
+        #items['productInfo'] = productInfo
+        #items['productPrices'] = productPrices
         #
         yield items
 
