@@ -22,11 +22,12 @@ class AmazonspiderSpider(scrapy.Spider):
         print('parser is called.')
         items = ScrapeamazonreviewsItem()
         print("item: ", ScrapeamazonreviewsItem)
-        productInfo = response.css('.a-text-normal span::text').extract()
-        productPrices = response.css('.a-price-whole span::text').extract()
-
+        productInfo = response.css('.a-size-medium').css('::text').extract()
+        productPrices = response.css('.a-price .a-offscreen').css('::text').extract()
+        productImageLink = response.css('.s-image::attr(src)').extract()
         items['productInfo'] = productInfo
         items['productPrices'] = productPrices
+        items['productImageLink'] = productImageLink
         #
         yield items
 

@@ -33,13 +33,25 @@ def scrape_amazon_reviews(sellerID):
 def _crawler_result(item, response, spider):
     output_data.append(dict(item))
 
-def formatting_reviews(reviews):
+def formatting_reviews(values, key):
     corpus = []
-    for paginatedReviews in reviews:
-        for review in paginatedReviews['productInfo']:
+    for paginatedReviews in values:
+        for review in paginatedReviews[key]:
             if review != '\n            ':
                 corpus.append(review)
     return corpus
+
+def formatting_response(raw, lenRaw):
+    response = []
+
+    for i in range(0, lenRaw):
+        item_holder = {}
+        for item in raw:
+            item_holder[item] = raw[item][i]
+        
+        response.append(item_holder)
+    
+    return response
 
 @app.route('/')
 def index():
@@ -55,13 +67,19 @@ def predict():
     data = {"success": False}
 
     scrape_amazon_reviews(sellerID)
-    formatted_output = formatting_reviews(output_data)
-    print("output: ",formatted_output)
-
+    formatted_product_info = formatting_reviews(output_data, 'productInfo')
+    formatted_price_info = formatting_reviews(output_data, 'productPrices')
+    formatted_product_image_link = formatting_reviews(output_data, 'productImageLink')
+    
     # if not formatted_output:
-    data["ProductInfo"] = formatted_output
+    d = {}
+    d["ProductInfo"] = formatted_product_info
+    d["ProductPrices"] = formatted_price_info
+    d["ProductImageLink"] = formatted_product_image_link
+    output = formatting_response(d, len(formatted_product_info))
+
     data = {"success": True,
-            "ProductInfo": formatted_output
+            "items" : output
             }
     
     response = flask.jsonify(data)
@@ -77,4 +95,4 @@ if __name__ == "__main__":
             app.run(threaded=True, port=5000)
     '''
     # app.run(host='0.0.0.0', port=5500)
-    app.run(threaded=True, port=5000)
+    app.run(threaded=True, port=5000, debug=True)
