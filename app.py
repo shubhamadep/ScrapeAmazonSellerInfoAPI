@@ -60,7 +60,9 @@ def predict():
 
     # if not formatted_output:
     data["ProductInfo"] = formatted_output
-    data = {"success": True}
+    data = {"success": True,
+            "ProductInfo": formatted_output
+            }
     
     response = flask.jsonify(data)
 
