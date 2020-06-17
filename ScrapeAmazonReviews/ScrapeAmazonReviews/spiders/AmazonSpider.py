@@ -14,7 +14,7 @@ class AmazonspiderSpider(scrapy.Spider):
         print("Parsing Seller ID: ", self.Amazon_Standard_Identification_Number)
         self.page_number = 1
         # self.start_urls = ['https://www.amazon.com/Echo-Wall-Clock-requires-compatible/product-reviews/'+self.Amazon_Standard_Identification_Number+'/ref=cm_cr_getr_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber='+str(1)]
-        self.start_urls = ['https://www.amazon.com/s?me=A19R3BN6ZSO9A1&marketplaceID=ATVPDKIKX0DER']
+        self.start_urls = ['https://www.amazon.com/s?me='+str(self.Amazon_Standard_Identification_Number)+'&marketplaceID=ATVPDKIKX0DER']
         self.name = 'AmazonSpider'
 
 
