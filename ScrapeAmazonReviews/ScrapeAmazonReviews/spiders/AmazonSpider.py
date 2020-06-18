@@ -23,11 +23,17 @@ class AmazonspiderSpider(scrapy.Spider):
         items = ScrapeamazonreviewsItem()
         print("item: ", ScrapeamazonreviewsItem)
         productInfo = response.css('.a-size-medium').css('::text').extract()
-        productPrices = response.css('.a-price .a-offscreen').css('::text').extract()
-        productImageLink = response.css('.s-image::attr(src)').extract()
+        productPrices = response.xpath('.//span[contains(@class,"a-price")][contains(@data-a-color,"base")]//span[contains(@class,"a-offscreen")]//text()').extract()
+        productImageLink = response.css('.s-image-fixed-height .s-image').css('::attr(src)').extract()
+        productLink = response.xpath('.//h2[contains(@class, "a-size-mini a-spacing-none a-color-base s-line-clamp-2")]').xpath('.//a[contains(@class, "a-link-normal a-text-normal")]/@href').extract()
+
+
+
         items['productInfo'] = productInfo
         items['productPrices'] = productPrices
         items['productImageLink'] = productImageLink
+        items['productLink'] = productLink
+
         #
         yield items
 
