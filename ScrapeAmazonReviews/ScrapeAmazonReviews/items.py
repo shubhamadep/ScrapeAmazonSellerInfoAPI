@@ -15,4 +15,5 @@ class ScrapeamazonreviewsItem(scrapy.Item):
     productInfo = scrapy.Field()
     productPrices = scrapy.Field()
     productImageLink = scrapy.Field()
+    productLink = scrapy.Field()
     pass
