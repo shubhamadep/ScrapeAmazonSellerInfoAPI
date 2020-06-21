@@ -26,6 +26,7 @@ app = flask.Flask(__name__)
 
 @crochet.wait_for(timeout=60.0)
 def scrape_amazon_reviews(sellerID):
+    
     dispatcher.connect(_crawler_result, signal=signals.item_scraped)
     eventual = crawl_runner.crawl(AmazonSpider.AmazonspiderSpider, url=sellerID)
     return eventual
@@ -57,16 +58,17 @@ def formatting_response(raw, lenRaw):
 def index():
     return "<h1>Welcome to our server !!</h1>"
 
-@app.route("/scrape", methods=["GET", "POST"])
+@app.route("/getproductdetails/scrape", methods=["GET"])
 def predict():
     
     args = request.args
     sellerID = args["SellerID"]
     print ("SELLER ID: ", args["SellerID"])
-
+    
     data = {"success": False}
 
     scrape_amazon_reviews(sellerID)
+
     formatted_product_info = formatting_reviews(output_data, 'productInfo','')
     formatted_price_info = formatting_reviews(output_data, 'productPrices','')
     formatted_product_image_link = formatting_reviews(output_data, 'productImageLink','')
@@ -78,7 +80,7 @@ def predict():
     d["ProductImageLink"] = formatted_product_image_link
     d["ProductLink"] = formatted_product_link
     output = formatting_response(d, len(formatted_product_info))
-
+    
     data = {"success": True,
             "items" : output
             }
