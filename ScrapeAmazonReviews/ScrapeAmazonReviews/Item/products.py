@@ -8,10 +8,14 @@
 import scrapy
 
 
-class ScrapeamazonreviewsItem(scrapy.Item):
+class ScrapeAmazonProduct(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     # name = scrapy.Field()
-    productInfo = scrapy.Field()
+    productTitle = scrapy.Field()
     productPrices = scrapy.Field()
+    productImageLink = scrapy.Field()
+    productLink = scrapy.Field()
+    asin = scrapy.Field()
+    productreviewsurl = scrapy.Field()
     pass
