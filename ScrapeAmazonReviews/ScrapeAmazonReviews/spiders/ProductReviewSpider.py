@@ -37,6 +37,9 @@ class ProductReviewSpider(scrapy.Spider):
         timestamp = response.css('#cm_cr-review_list .review-date').css('::text').extract()
         timestamp = [ts.split(' on ')[1] for ts in timestamp]
         
+        customer_name = response.css('#cm_cr-review_list .a-profile-name').css('::text').extract()
+
+        items['customer_name'] = customer_name
         items['reviews'] = reviews
         items['ratings'] = [rating.split(' out')[0] for rating in ratings]
         items['review_title'] = review_title

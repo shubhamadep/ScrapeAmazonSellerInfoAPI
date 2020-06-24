@@ -105,14 +105,15 @@ def get_product_reviews():
     formatted_ratings = [y for x in [review_details[index]['ratings'] for index in range(0,len(review_details))] for y in x]
     formatted_review_title = [y for x in [review_details[index]['review_title'] for index in range(0,len(review_details))] for y in x]
     formatted_timestamp = [y for x in [review_details[index]['timestamp']for index in range(0,len(review_details))] for y in x]
-
+    formatted_customer_name = [y for x in [review_details[index]['customer_name']for index in range(0,len(review_details))] for y in x]
     d = {}
 
     d["Rating"] = formatted_ratings
     d["Title"] = formatted_review_title
     d["Review"] = formatted_reviews
     d["Date"] = formatted_timestamp
-
+    d["CustomerName"] = formatted_customer_name
+    
     output = formatting_response_list(d, len(formatted_review_title))
 
     data = {"success": True,
