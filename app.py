@@ -3,6 +3,9 @@ crochet.setup()
 
 import flask
 from flask import request
+from flask_redis import FlaskRedis
+import json
+import config as cfg
 from scrapy.crawler import CrawlerProcess
 from scrapy.signalmanager import dispatcher
 from scrapy import signals
@@ -24,8 +27,14 @@ crawl_runner = CrawlerProcess({
 output_data = []
 review_details = []
 app = flask.Flask(__name__)
+app.config['REDIS_URL'] = cfg.REDIS_URL
+redis_client = FlaskRedis(app)
 output = {}
 
+def check_redis_for_response(key):
+
+    if redis_client.exists(key): return True
+    return False
 
 @crochet.wait_for(timeout=60.0)
 def scrape_amazon_products(sellerID):
@@ -48,16 +57,19 @@ def review_crawler_result(item, response, spider):
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    return "<h1>Welcome to our API, lets scrape..</h1>"
 
 @app.route("/getproductdetails/scrape", methods=["GET"])
 def get_product_details():
-    
+
     args = request.args
     sellerID = args["SellerID"]
     print ("SELLER ID: ", args["SellerID"])
     
     data = {"success": False}
+
+    if check_redis_for_response(sellerID):
+        return json.loads(redis_client.get(sellerID))
 
     scrape_amazon_products(sellerID)
 
@@ -86,7 +98,7 @@ def get_product_details():
             }
     
     response = flask.jsonify(data)
-
+    redis_client.set(sellerID, json.dumps(data))
     return response
 
 @app.route("/reviews/scrape", methods=["GET"])
@@ -97,6 +109,9 @@ def get_product_reviews():
     print ("ASIN : ", args["ASIN"])
     
     data = {"success": False}
+
+    if check_redis_for_response(asin):
+        return json.loads(redis_client.get(asin))
 
     scrape_product_reviews(asin)
 
@@ -121,6 +136,8 @@ def get_product_reviews():
             }
     
     response = flask.jsonify(data)
+    redis_client.set(asin, json.dumps(data))
+
     return response
 
 if __name__ == "__main__":
