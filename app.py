@@ -13,6 +13,9 @@ from scrapy.utils.project import get_project_settings
 from ScrapeAmazonReviews.ScrapeAmazonReviews.spiders import ProductReviewSpider
 from ScrapeAmazonReviews.ScrapeAmazonReviews.spiders import AmazonSpider
 from ScrapeAmazonReviews.ScrapeAmazonReviews.helpers.format import format_response_list, format_response_dict, format_scrapped_data
+#MongoDB imports
+
+
 crawl_runner = CrawlerProcess({
    'ROBOTSTXT_OBEY': True,
    'ROTATING_PROXY_LIST_PATH': './proxies.txt',
@@ -139,6 +142,18 @@ def get_product_reviews():
 
     return response
 
+
+"""MongoDB Server Instance Testing"""
+
+@app.route("/mongoDBTest/all", methods=["GET"])
+def getAllProductInfo():
+    testProduct = productInfo.productInfo.query.all()
+    dictn  = {}
+    for x in testProduct:
+        dictn['testDocument'] = x.testDocument
+    response = flask.jsonify(dictn)
+    return response
+
 if __name__ == "__main__":
     '''
         use 
@@ -147,5 +162,8 @@ if __name__ == "__main__":
         Threaded option to enable multiple instances for multiple user access support
             app.run(threaded=True, port=5000)
     '''
+
     # app.run(host='0.0.0.0', port=5500)
+    from databaseConfig import db
+    import  model.productInfo as productInfo
     app.run(threaded=True, port=5000, debug=True)
