@@ -1,5 +1,5 @@
 
-def formatting_response_dict(raw, lenRaw):
+def format_response_dict(raw, lenRaw):
     response = {}
 
     for i in range(0, lenRaw):
@@ -11,7 +11,7 @@ def formatting_response_dict(raw, lenRaw):
     
     return response
 
-def formatting_response_list(raw, lenRaw):
+def format_response_list(raw, lenRaw):
     response = []
     for i in range(0, lenRaw):
         item_holder = {}
@@ -20,3 +20,11 @@ def formatting_response_list(raw, lenRaw):
         response.append(item_holder)
 
     return response
+
+
+def format_scrapped_data(data,key):
+     corpus = []
+     for d in data:
+         for review in d[key]:
+            corpus.append(review)
+     return corpus

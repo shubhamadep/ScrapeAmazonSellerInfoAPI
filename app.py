@@ -12,8 +12,7 @@ from scrapy import signals
 from scrapy.utils.project import get_project_settings
 from ScrapeAmazonReviews.ScrapeAmazonReviews.spiders import ProductReviewSpider
 from ScrapeAmazonReviews.ScrapeAmazonReviews.spiders import AmazonSpider
-from ScrapeAmazonReviews.ScrapeAmazonReviews.helpers.format import formatting_response_list, formatting_response_dict
-
+from ScrapeAmazonReviews.ScrapeAmazonReviews.helpers.format import format_response_list, format_response_dict, format_scrapped_data
 crawl_runner = CrawlerProcess({
    'ROBOTSTXT_OBEY': True,
    'ROTATING_PROXY_LIST_PATH': './proxies.txt',
@@ -32,7 +31,6 @@ redis_client = FlaskRedis(app)
 output = {}
 
 def check_redis_for_response(key):
-
     if redis_client.exists(key): return True
     return False
 
@@ -73,12 +71,12 @@ def get_product_details():
 
     scrape_amazon_products(sellerID)
 
-    formatted_product_info = output_data[0]['productTitle']
-    formatted_price_info = output_data[0]['productPrices']
-    formatted_product_image_link = output_data[0]['productImageLink']
-    formatted_product_link = output_data[0]['productLink']
-    formatted_product_reviews_url = output_data[0]['productreviewsurl']
-    formatted_asin = output_data[0]['asin']
+    formatted_product_info = format_scrapped_data(output_data,'productTitle')
+    formatted_price_info = format_scrapped_data(output_data,'productPrices')
+    formatted_product_image_link = format_scrapped_data(output_data,'productImageLink')
+    formatted_product_link = format_scrapped_data(output_data,'productLink')
+    formatted_product_reviews_url = format_scrapped_data(output_data,'productreviewsurl')
+    formatted_asin = format_scrapped_data(output_data,'asin')
 
     # if not formatted_output:
     d = {}
@@ -91,7 +89,7 @@ def get_product_details():
     d["ProductReviewsUrl"] = formatted_product_reviews_url
 
     
-    output = formatting_response_dict(d, len(formatted_product_info))
+    output = format_response_dict(d, len(formatted_product_info))
     
     data = {"success": True,
             "items" : output
@@ -116,11 +114,12 @@ def get_product_reviews():
     scrape_product_reviews(asin)
 
 
-    formatted_reviews = [y for x in [review_details[index]['reviews'] for index in range(0,len(review_details))] for y in x]
-    formatted_ratings = [y for x in [review_details[index]['ratings'] for index in range(0,len(review_details))] for y in x]
-    formatted_review_title = [y for x in [review_details[index]['review_title'] for index in range(0,len(review_details))] for y in x]
-    formatted_timestamp = [y for x in [review_details[index]['timestamp']for index in range(0,len(review_details))] for y in x]
-    formatted_customer_name = [y for x in [review_details[index]['customer_name']for index in range(0,len(review_details))] for y in x]
+    formatted_reviews = format_scrapped_data(review_details,'reviews')
+    formatted_ratings = format_scrapped_data(review_details,'ratings')
+    formatted_review_title = format_scrapped_data(review_details,'review_title')
+    formatted_timestamp = format_scrapped_data(review_details,'timestamp')
+    formatted_customer_name = format_scrapped_data(review_details,'customer_name')
+
     d = {}
 
     d["Rating"] = formatted_ratings
@@ -129,7 +128,7 @@ def get_product_reviews():
     d["Date"] = formatted_timestamp
     d["CustomerName"] = formatted_customer_name
     
-    output = formatting_response_list(d, len(formatted_review_title))
+    output = format_response_list(d, len(formatted_review_title))
 
     data = {"success": True,
             "items": output

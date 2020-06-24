@@ -5,11 +5,8 @@ from urllib.parse import urljoin
 
 class AmazonspiderSpider(scrapy.Spider):
 
-    def __init__(self, url=None, *args, **kwargs):
-        
-        
-        # url as a parameter receives SellerID.
-        
+    def __init__(self, url=None, *args, **kwargs):     
+        # url as a parameter receives SellerID.      
         self.Amazon_Standard_Identification_Number = url
         print("Parsing Seller ID: ", self.Amazon_Standard_Identification_Number)
         self.page_number = 1
@@ -20,6 +17,10 @@ class AmazonspiderSpider(scrapy.Spider):
 
     def parse(self, response):
         print('parser is called.')
+        yield scrapy.Request(self.start_urls[0], callback=self.parse_product_page)
+
+
+    def parse_product_page(self, response):
         items = ScrapeAmazonProduct()
         productInfo = response.css('.a-size-medium').css('::text').extract()
         productPrices = response.xpath('.//span[contains(@class,"a-price")][contains(@data-a-color,"base")]//span[contains(@class,"a-offscreen")]//text()').extract()
@@ -48,4 +49,4 @@ class AmazonspiderSpider(scrapy.Spider):
         items['productreviewsurl'] = productreviewsurl
         yield items
 
-        yield scrapy.Request(absolute_next_page_url, callback=self.parse)
+        yield scrapy.Request(absolute_next_page_url, callback=self.parse_product_page)
