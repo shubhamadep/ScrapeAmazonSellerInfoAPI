@@ -18,4 +18,5 @@ class ScrapeAmazonProduct(scrapy.Item):
     productLink = scrapy.Field()
     asin = scrapy.Field()
     productreviewsurl = scrapy.Field()
+    sellerName = scrapy.Field()
     pass

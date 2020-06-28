@@ -3,6 +3,7 @@ crochet.setup()
 
 import flask
 from flask import request
+from flask_cors import CORS
 from flask_redis import FlaskRedis
 import json
 import config as cfg
@@ -28,7 +29,10 @@ crawl_runner = CrawlerProcess({
 
 output_data = []
 review_details = []
-app = flask.Flask(__name__)
+
+app = flask.Flask(__name__, instance_relative_config=True)
+CORS(app)
+
 app.config['REDIS_URL'] = cfg.REDIS_URL
 redis_client = FlaskRedis(app)
 output = {}
@@ -73,14 +77,14 @@ def get_product_details():
         return json.loads(redis_client.get(sellerID))
 
     scrape_amazon_products(sellerID)
-
+    print('Output : ',output_data[0]['sellerName'])
     formatted_product_info = format_scrapped_data(output_data,'productTitle')
     formatted_price_info = format_scrapped_data(output_data,'productPrices')
     formatted_product_image_link = format_scrapped_data(output_data,'productImageLink')
     formatted_product_link = format_scrapped_data(output_data,'productLink')
     formatted_product_reviews_url = format_scrapped_data(output_data,'productreviewsurl')
     formatted_asin = format_scrapped_data(output_data,'asin')
-
+    #formatted_seller_name = format_scrapped_data(output_data,'sellerName')
     # if not formatted_output:
     d = {}
 
@@ -90,11 +94,12 @@ def get_product_details():
     d["ProductLink"] = formatted_product_link
     d["ASIN"] = formatted_asin
     d["ProductReviewsUrl"] = formatted_product_reviews_url
-
-    
+    #ormatted_seller_name = formatted_seller_name[len(formatted_seller_name)-1]
+    #print("seller name ",formatted_seller_name)
     output = format_response_dict(d, len(formatted_product_info))
     
-    data = {"success": True,
+    data = {"success" : True,
+            "sellerName" : output_data[0]['sellerName'][0],
             "items" : output
             }
     
