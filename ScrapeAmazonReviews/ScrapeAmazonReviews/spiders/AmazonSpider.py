@@ -14,6 +14,7 @@ class AmazonspiderSpider(scrapy.Spider):
             'https://www.amazon.com/s?me='+str(self.Amazon_Standard_Identification_Number)+'&marketplaceID=ATVPDKIKX0DER'
             ]
         self.name = 'AmazonSpider' 
+        self.sellerName = ''
 
     def parse(self, response):
         print('parser is called.')
@@ -26,6 +27,7 @@ class AmazonspiderSpider(scrapy.Spider):
         productPrices = response.xpath('.//span[contains(@class,"a-price")][contains(@data-a-color,"base")]//span[contains(@class,"a-offscreen")]//text()').extract()
         productImageLink = response.css('.s-image-fixed-height .s-image').css('::attr(src)').extract()
         productLink = response.xpath('.//h2[contains(@class, "a-size-mini a-spacing-none a-color-base s-line-clamp-2")]').xpath('.//a[contains(@class, "a-link-normal a-text-normal")]/@href').extract()
+        
 
         next_page_url = response.xpath('.//li[contains(@class, "a-last")]/a/@href').get()
         absolute_next_page_url = response.urljoin(next_page_url)
@@ -35,6 +37,11 @@ class AmazonspiderSpider(scrapy.Spider):
         items['productImageLink'] = productImageLink
         items['productLink'] = productLink
 
+        if self.sellerName == '':
+            self.sellerName = response.css('.a-color-state').css('::text').extract()
+            items['sellerName'] = self.sellerName
+            print('sellerName :',items['sellerName'])
+        
         asin = []
         productreviewsurl = []
 
