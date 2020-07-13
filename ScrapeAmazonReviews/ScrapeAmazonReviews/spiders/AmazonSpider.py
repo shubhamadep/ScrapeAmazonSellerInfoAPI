@@ -18,7 +18,7 @@ class AmazonspiderSpider(scrapy.Spider):
 
     def parse(self, response):
         print('parser is called.')
-        yield scrapy.Request(self.start_urls[0], callback=self.parse_product_page)
+        return scrapy.Request(self.start_urls[0], callback=self.parse_product_page)
 
 
     def parse_product_page(self, response):

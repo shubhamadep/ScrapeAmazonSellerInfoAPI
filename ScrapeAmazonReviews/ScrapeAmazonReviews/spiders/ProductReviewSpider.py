@@ -24,7 +24,7 @@ class ProductReviewSpider(scrapy.Spider):
         product_reviews_url = 'https://www.amazon.com/'+product_title+'/product-reviews/'+self.product_review_url+'/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews'
         print('Product Reviews URL : ',product_reviews_url)
 
-        yield scrapy.Request(product_reviews_url, callback=self.parse_reviews)
+        return scrapy.Request(product_reviews_url, callback=self.parse_reviews)
     
     def parse_reviews(self, response):
         items = ScrapeAmazonReviews()

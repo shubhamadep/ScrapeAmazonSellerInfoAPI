@@ -99,7 +99,7 @@ def get_product_details():
     output = format_response_dict(d, len(formatted_product_info))
     
     data = {"success" : True,
-            "sellerName" : output_data[0]['sellerName'][0],
+            "sellerName" : output_data[0]['sellerName'],
             "items" : output
             }
     
