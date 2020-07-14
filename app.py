@@ -13,7 +13,7 @@ from scrapy import signals
 from scrapy.utils.project import get_project_settings
 from ScrapeAmazonReviews.ScrapeAmazonReviews.spiders import ProductReviewSpider
 from ScrapeAmazonReviews.ScrapeAmazonReviews.spiders import AmazonSpider
-from ScrapeAmazonReviews.ScrapeAmazonReviews.spiders import SellerSpider
+#from ScrapeAmazonReviews.ScrapeAmazonReviews.spiders import SellerSpider
 from ScrapeAmazonReviews.ScrapeAmazonReviews.helpers.format import format_response_list, format_response_dict, format_scrapped_data
 #MongoDB imports
 
@@ -30,7 +30,6 @@ crawl_runner = CrawlerProcess({
 
 output_data = []
 review_details = []
-seller_details = []
 
 app = flask.Flask(__name__, instance_relative_config=True)
 CORS(app)
@@ -43,15 +42,15 @@ def check_redis_for_response(key):
     if redis_client.exists(key): return True
     return False
 
-@crochet.wait_for(timeout=60.0)
-def scrape_seller_details(sellerID):
+#@crochet.wait_for(timeout=60.0)
+#def scrape_seller_details(sellerID):
     
-    dispatcher.connect(seller_crawler_result, signal=signals.item_scraped)
-    eventual = crawl_runner.crawl(SellerSpider.SellerSpider, url=sellerID)
-    return eventual
+#    dispatcher.connect(seller_crawler_result, signal=signals.item_scraped)
+#    eventual = crawl_runner.crawl(SellerSpider.SellerSpider, url=sellerID)
+#    return eventual
 
-def seller_crawler_result(item, response, spider):
-    output_data.append(dict(item))
+#def seller_crawler_result(item, response, spider):
+#    output_data.append(dict(item))
 
 @crochet.wait_for(timeout=60.0)
 def scrape_amazon_products(sellerID):
@@ -114,7 +113,7 @@ def get_product_details():
     print("ProductLink",len(d["ProductLink"]))
     print("ASIN",len(d["ASIN"]))
     print("ProductReviewsUrl",len(d["ProductReviewsUrl"]))
-    
+
     output = format_response_dict(d, len(formatted_product_info))
     
     data = {"success" : True,
