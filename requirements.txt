@@ -20,6 +20,8 @@ defusedxml==0.6.0
 entrypoints==0.3
 Flask==1.1.1
 Flask-Cors==3.0.8
+Flask-MongoAlchemy==0.7.2
+Flask-PyMongo==2.3.0
 flask-redis==0.4.0
 gast==0.3.3
 google-pasta==0.1.8
@@ -48,6 +50,7 @@ Markdown==3.2.1
 MarkupSafe==1.1.1
 mccabe==0.6.1
 mistune==0.8.4
+MongoAlchemy==0.19
 nbconvert==5.6.1
 nbformat==5.0.4
 notebook==6.0.3
@@ -70,6 +73,7 @@ PyDispatcher==2.0.5
 Pygments==2.6.1
 PyHamcrest==2.0.1
 pylint==2.5.3
+pymongo==3.10.1
 pyOpenSSL==19.1.0
 pyrsistent==0.15.7
 python-dateutil==2.8.1
@@ -106,4 +110,3 @@ Werkzeug==1.0.0
 wrapt==1.12.0
 zipp==3.1.0
 zope.interface==4.7.1
-pytest==5.4.3
