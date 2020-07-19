@@ -12,11 +12,13 @@ class ScrapeAmazonProduct(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     # name = scrapy.Field()
-    productTitle = scrapy.Field()
-    productPrices = scrapy.Field()
-    productImageLink = scrapy.Field()
-    productLink = scrapy.Field()
+    product_title = scrapy.Field()
+    product_price = scrapy.Field()
+    product_image_link = scrapy.Field()
+    product_link = scrapy.Field()
     asin = scrapy.Field()
-    productreviewsurl = scrapy.Field()
-    sellerName = scrapy.Field()
+    product_reviews_url = scrapy.Field()
+    seller_name = scrapy.Field()
+    product_count = scrapy.Field()
+    
     pass

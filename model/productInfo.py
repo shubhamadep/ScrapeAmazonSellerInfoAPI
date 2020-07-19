@@ -1,5 +1,5 @@
-from databaseConfig import db
+from application.databaseConfig import mongo
 
 
-class productInfo(db.Document):
-    testDocument = db.StringField()
+class productInfo():
+    testDocument = mongo.StringField()
