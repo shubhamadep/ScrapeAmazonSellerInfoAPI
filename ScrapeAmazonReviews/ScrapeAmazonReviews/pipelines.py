@@ -9,7 +9,9 @@ from scrapy.exceptions import DropItem
 
 class ScrapeamazonreviewsPipeline(object):
     def process_item(self, item, spider):
+        
         adapter = ItemAdapter(item)
+        print('In Process Item', adapter.asdict())
         if adapter.get('product_price'):
             return item
         else:

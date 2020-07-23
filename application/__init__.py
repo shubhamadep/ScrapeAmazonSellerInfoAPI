@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 import os
-from application.databaseConfig import mongo
+
 import application.config as cfg
 
 def create_app():
@@ -15,7 +15,6 @@ def create_app():
     )
  
 
-    mongo.init_app(app)
 
     
     try:

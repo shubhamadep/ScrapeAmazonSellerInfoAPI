@@ -42,8 +42,11 @@ class AmazonspiderSpider(scrapy.Spider):
         if self.seller_name == '':
             self.seller_name = response.css('.a-color-state').css('::text').extract()
             items['seller_name'] = self.seller_name
+            items['_id'] = self.Amazon_Standard_Identification_Number
+            yield scrapy.Request('https://www.amazon.com/sp?&marketplaceID=ATVPDKIKX0DER&seller='+items['_id'], callback=self.parse_seller_page, meta={'items':items})
+
             
-        if self.product_count == 0:
+            '''       if self.product_count == 0:
             self.product_count = response.css('.sg-col-30-of-36 span:nth-child(1)').css('::text').extract()
             pc = self.product_count[0].split('results')
             count = pc[0].split()
@@ -52,6 +55,7 @@ class AmazonspiderSpider(scrapy.Spider):
                 items['product_count'] = count[0]
             else:
                 items['product_count'] = count[2]
+            '''
         asin = []
         product_reviews_url = []
 
@@ -61,10 +65,19 @@ class AmazonspiderSpider(scrapy.Spider):
             asin.append(productSplit[1].split("/")[0])
             product_reviews_url.append(productSplit[0]+'/product-reviews/'+asin[i]+'/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews')
             
-            
+
         items['asin'] = asin
         items['product_reviews_url'] = product_reviews_url
         
         yield items 
-        yield scrapy.Request(absolute_next_page_url, callback=self.parse_product_page)
+        #yield scrapy.Request(absolute_next_page_url, callback=self.parse_product_page)
         
+
+    def parse_seller_page(self, response):
+        items = response.meta['items']
+        seller_reviews = response.css('.feedback-detail-description').css('::text').extract()
+        seller_ratings = response.xpath('.//i[contains(@class, "feedback-detail-stars")]').xpath('.//span[contains(@class, "a-icon-alt")]//text()').extract()
+        print('seller_ratings : ',seller_ratings)
+        items['seller_ratings'] = (seller_ratings[0]).split(' out')[0]
+        items['seller_reviews'] = (seller_reviews[1]).split('(')[1].split()[0]
+        return items

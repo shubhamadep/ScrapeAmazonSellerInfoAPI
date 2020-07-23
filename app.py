@@ -3,7 +3,8 @@ crochet.setup()
 import flask
 from application import create_app
 from flask_redis import FlaskRedis
-from application.databaseConfig import mongo
+from application import databaseConfig
+from flask_pymongo import pymongo
 #MongoDB imports
 
 app = create_app()
@@ -23,8 +24,8 @@ def getAllProductInfo():
 
 @app.route("/")
 def index():
-    user_collection = mongo.db.users
-    user_collection.insert({'name' : 'Pallavi'})
+    products = pymongo.collection.Collection(databaseConfig.db, 'products')
+    products.insert({'name' : 'Pallavi'})
     return '<h1>Added a User!</h1>'
 
 if __name__ == "__main__":

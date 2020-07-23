@@ -23,8 +23,7 @@ def format_response_list(raw, lenRaw):
 
 
 def format_scrapped_data(data,key):
-     corpus = []
-     for d in data:
-         for review in d[key]:
-            corpus.append(review)
-     return corpus
+    corpus = []
+    for review in data[key]:
+        corpus.append(review)
+    return corpus
