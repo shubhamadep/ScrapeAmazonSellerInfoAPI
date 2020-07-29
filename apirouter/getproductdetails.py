@@ -45,9 +45,11 @@ def get_product_details():
     scrape_amazon_products(sellerID)
     output_data = []
     output_data = db['products'].find({"_id": sellerID})
-    output_data = list(output_data)[0]
-    print('output_data', output_data)
-    if output_data!=[]:
+    print(output_data.count())
+
+    if output_data.count()!=0:
+        output_data = list(output_data)[0]
+        print('output_data', output_data)
         formatted_product_info = format_scrapped_data(output_data,'product_title')
         formatted_price_info = format_scrapped_data(output_data,'product_price')
         formatted_product_image_link = format_scrapped_data(output_data,'product_image_link')
@@ -66,7 +68,7 @@ def get_product_details():
 
         print('length',len(d["productTitle"]),len(d["ProductPrices"]),len(d["ProductImageLink"]),len(d["ProductLink"])
         ,len(d["ProductReviewsUrl"]),len(d["ASIN"]))
-        output = format_response_dict(d, len(formatted_product_info))
+        output = format_response_list(d, len(formatted_product_info))
     
         data = {"success" : True,
                 "sellerName" : output_data['seller_name'][0],
@@ -77,7 +79,7 @@ def get_product_details():
                 }
     
         response = flask.jsonify(data)
-        #redis_client.set(sellerID, json.dumps(data),86400)
+        redis_client.set(sellerID, json.dumps(data),86400)
         return response
     else:
         return ('<h1>There was a problem scraping product details</h1>')

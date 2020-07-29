@@ -25,9 +25,12 @@ class MongoPipeline:
         self.client.close()
 
     def process_item(self, item, spider):
-        cursor = self.db[self.collection_name].find({"_id": item['_id']})
-        if cursor.count() == 0:
-            self.db[self.collection_name].insert_one(ItemAdapter(item).asdict())
-        else:
-            self.db[self.collection_name].update_one({ "_id": item['_id'] }, {"$set": ItemAdapter(item).asdict()})
+        if item['product_title'] != []:
+            cursor = self.db[self.collection_name].find({"_id": item['_id']})
+            if cursor.count() == 0:
+                self.db[self.collection_name].insert_one(ItemAdapter(item).asdict())
+            else:
+                self.db[self.collection_name].update_one({ "_id": item['_id'] }, {"$set": ItemAdapter(item).asdict()})
+            return item
+        
         return item
